@@ -1,4 +1,4 @@
-#!/bin/python3.6
+#!/usr/bin/python
 
 # *************************************
 #
@@ -251,17 +251,17 @@ for thermostat in response['thermostatList']:
 
                 #rows are returned up until the current time, but have empty strings in the columns if there is no data
                 #rows with data, but with zero runtime have a 0
-                if auxHeat1 is not '':
+                if auxHeat1 != '':
                         points.append(logPoint(sensorName=thermostatName, sensorValue=float(auxHeat1), sensorType="heattime", recordedTime=builttime))
                         point_count += 1
                         last_recorded_time = datetime_obj
                         logger.debug(thermostatName + " heat ran for " + auxHeat1 + " - " + builttime)
-                if compCool1 is not '':
+                if compCool1 != '':
                         points.append(logPoint(sensorName=thermostatName, sensorValue=float(compCool1), sensorType="cooltime", recordedTime=builttime))
                         point_count += 1
                         last_recorded_time = datetime_obj
                         logger.debug(thermostatName + " cool ran for " + auxHeat1 + " - " + builttime)
-                if fan is not '':
+                if fan != '':
                         points.append(logPoint(sensorName=thermostatName, sensorValue=float(fan), sensorType="fantime", recordedTime=builttime))
                         point_count += 1
                         last_recorded_time = datetime_obj
