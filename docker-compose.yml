@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  ecobee-influx:
+    image: ecobee-influx
+    container_name: ecobee-influx
+    restart: always
+    environment:
+      - TZ=America/Phoenix
+    volumes:
+      - ./state:/root
