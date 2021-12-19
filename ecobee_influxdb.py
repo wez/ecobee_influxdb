@@ -70,13 +70,22 @@ def get_access_token():
     return access_token
 
 
-def logPoint(sensorName=None, thermostatName=None, sensorValue=None, sensorType=None):
-    return (
+def logPoint(
+    sensorName=None,
+    thermostatName=None,
+    sensorValue=None,
+    sensorType=None,
+    recordedTime=None,
+):
+    point = (
         influxdb_client.Point(sensorType)
         .tag("thermostat_name", thermostatName)
         .tag("sensor", sensorName)
         .field("value", sensorValue)
     )
+    if recordedTime:
+        return point.time(recordedTime)
+    return point
 
 
 def get_thermostat_data(access_token):
@@ -147,6 +156,18 @@ def thermostat_data_to_points(tdata):
                         )
                     )
 
+        ext_runtime = thermostat["extendedRuntime"]
+        # This is a good candidate for visualizing with the Mosaic type
+        points.append(
+            logPoint(
+                sensorName=thermostatName,
+                thermostatName=thermostatName,
+                sensorValue=ext_runtime["hvacMode"][2],
+                sensorType="hvacMode",
+                recordedTime=ext_runtime["lastReadingTimestamp"],
+            )
+        )
+
         runtime = thermostat["runtime"]
         temp = float(runtime["actualTemperature"]) / 10.0
         heatTemp = float(runtime["desiredHeat"]) / 10.0
@@ -210,6 +231,7 @@ def thermostat_data_to_points(tdata):
                 sensorType="outsideHumidity",
             )
         )
+        # This is a good candidate for visualizing with the Mosaic type
         points.append(
             logPoint(
                 sensorName=thermostatName,
